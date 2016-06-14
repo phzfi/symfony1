@@ -457,7 +457,9 @@ class sfRouting
 
     $params = sfToolkit::arrayDeepMerge($defaults, $params);
 
-    $real_url = preg_replace('/\:([^\/]+)/e', 'urlencode($params["\\1"])', $url);
+    $real_url = preg_replace_callback('/\:([^\/]+)/', function ($params) {
+        return urlencode($params[1]);
+    }, $url);
 
     // we add all other params if *
     if (strpos($real_url, '*'))
