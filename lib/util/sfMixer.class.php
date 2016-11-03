@@ -116,7 +116,11 @@ class sfMixer
       $class = $mixin[0];
       if (!isset(self::$mixinInstances[$class]))
       {
-        self::$mixinInstances[$class] = new $class();
+          if ($class == 'OnSpotAgent') { //hack for CMAX and PHP5.4 compability
+              self::$mixinInstances[$class] = new $class($GLOBALS['dbList'][DB_MASTER]);
+          } else {
+              self::$mixinInstances[$class] = new $class();
+          }
         if (method_exists(self::$mixinInstances[$class], 'initialize'))
         {
           self::$mixinInstances[$class]->initialize();
