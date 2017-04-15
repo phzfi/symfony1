@@ -29,7 +29,8 @@ class sfRouting
 
   protected
     $current_route_name = '',
-    $routes             = array();
+    $routes             = array(),
+    $requestParams      = array();
 
   /**
   * Retrieve the singleton instance of this class.
@@ -391,7 +392,7 @@ class sfRouting
       {
         if (!isset($params[$tmp]) && !isset($defaults[$tmp]))
         {
-          throw new sfException(sprintf('Route named "%s" have a mandatory "%s" parameter', $name, $tmp));
+            throw new sfException(sprintf('Route named "%s" have a mandatory "%s" parameter', $name, $tmp));
         }
       }
     }
@@ -456,9 +457,10 @@ class sfRouting
     }
 
     $params = sfToolkit::arrayDeepMerge($defaults, $params);
+    $this->requestParams = $params;
 
     $real_url = preg_replace_callback('/\:([^\/]+)/', function ($params) {
-        return urlencode($params[1]);
+        return urlencode($this->requestParams[$params[1]]);
     }, $url);
 
     // we add all other params if *
